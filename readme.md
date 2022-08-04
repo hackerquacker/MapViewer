@@ -38,7 +38,7 @@ map your_map_name {
 }
 ```
 
-###Map Data:
+### Map Data:
 All parameters like `[this]` are optional, but recommended.
 
 Motorways: `motorway(number_str, road_name_str, [width], (start_x, start_y), (next_x, next_y), [(next_x, next_y)...]);`
@@ -53,7 +53,7 @@ Local: `highway(number_str, road_name_str, [width], (start_x, start_y), (next_x,
 
 You can have as many points for a road as you want.
 
-###Example:
+### Example:
 
 ```
 map example_map {
