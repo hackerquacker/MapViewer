@@ -60,14 +60,23 @@ public class RoadNumber {
         else g.setColor(new Color(19, 145, 15));
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
 
-        float width = g.getFontMetrics().stringWidth(this.road.getName());
+        String[] splitStr = this.road.getName().split(" ");
+
+        float width = g.getFontMetrics().stringWidth(splitStr[0]);
 
         float w = width + 10;
+        if (splitStr.length >= 2)
+            w += 3;
         float h = 19;
 
         g.fillRect(x - (int)(w/2), y - (int)(h/2), (int)w, (int)h);
         g.setColor(Color.WHITE);
-        g.drawString(this.road.getName(), x + 5 - (int)(w/2), y + 14 - (int)(h/2));
+        g.drawString(splitStr[0], x + 5 - (int)(w/2) - (splitStr.length-1)*3, y + 14 - (int)(h/2));
+
+        if (splitStr.length > 1) {
+            g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 9));
+            g.drawString(splitStr[1], x + 3 - (int)(w/2) + width, y + 12 - (int) (h / 2));
+        }
     }
 
     private static int direction(Point p1, Point p2){

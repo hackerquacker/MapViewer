@@ -4,17 +4,24 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This object handles drawing of roads
+ */
 public class Road {
 
-    private String name;
-    private String number;
+    private String name;    // the road name
 
-    private Color color;
-    private RoadType type;
+    private Color color;    // the colour of the road
+    private RoadType type;  // the type of this road
 
-    private List<Point> points;
-    private int width = -1;
+    private List<Point> points; // the coordinates for each node of this road
+    private int width = -1;     // the width of this road
 
+    /**
+     * Creates a new road.
+     * @param name  The name of the road
+     * @param type  The type of this road
+     */
     public Road(String name, RoadType type){
         this.name = name;
         this.type = type;
@@ -23,6 +30,13 @@ public class Road {
         this.points = new ArrayList<>();
     }
 
+    /**
+     * Creates a new road
+     * @param name  The name of this road
+     * @param type  The type of this road
+     * @param points    The list of nodes for this road
+     * @param width     The width of this road
+     */
     public Road(String name, String type, List<Point> points, int width){
         if (type.equals("motorway"))
             this.type = RoadType.MOTORWAY;
@@ -48,29 +62,54 @@ public class Road {
         }
     }
 
+    /**
+     * Appends a new node to the end of this road
+     * @param x the x coord
+     * @param y the y coord
+     */
     public void addPoint(int x, int y){
         this.points.add(new Point(x, y));
     }
 
+    /**
+     * Returns the name of this road
+     * @return
+     */
     public String getName(){
         return this.name;
     }
 
+    /**
+     * Returns the colour of this road
+     * @return
+     */
     public Color getColor(){
         return this.color;
     }
 
+    /**
+     * Returns the list of points that make up this road
+     * @return
+     */
     public List<Point> getPoints(){
         return this.points;
     }
 
+    /**
+     * Returns the type of this road
+     * @return
+     */
     public RoadType getType(){
         return this.type;
     }
 
+    /**
+     * Draws the road onto the canvas
+     * @param g         The graphics context
+     * @param scale     The scale of the map
+     */
     public void drawRoad(Graphics2D g, float scale){
         Point lastPoint = this.points.get(0);
-
 
         for (int i = 1; i < this.points.size(); i++) {
             if (this.type == RoadType.ROUTE){
