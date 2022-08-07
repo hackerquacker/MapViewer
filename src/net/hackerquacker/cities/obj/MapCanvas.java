@@ -50,9 +50,15 @@ public class MapCanvas extends JPanel {
         this.repaint();
     }
 
-    public void zoom(float factor){
+    public void zoom(float factor, Point point){
         if (this.scale + factor >= 0.1f && this.scale + factor < 10f)
             this.scale += factor;
+
+        if (point != null) {
+            System.out.println(point.getX()*scale + ", " + point.getY()*scale);
+
+        }
+
         this.repaint();
     }
 

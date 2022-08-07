@@ -84,7 +84,7 @@ public class GUI extends JFrame {
         this.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                canvas.zoom(e.getUnitsToScroll() * 0.1f);
+                canvas.zoom(e.getUnitsToScroll() * 0.1f, new Point(e.getX(), e.getY()));
             }
         });
 
@@ -94,10 +94,10 @@ public class GUI extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_EQUALS){
-                    canvas.zoom(0.1f);
+                    canvas.zoom(0.1f, null);
                     System.out.println("Zoom in");
                 }else if (e.getKeyCode() == KeyEvent.VK_MINUS){
-                    canvas.zoom(-0.1f);
+                    canvas.zoom(-0.1f, null);
                     System.out.println("Zoom out");
                 }
             }
