@@ -16,10 +16,12 @@ public class Map {
 
     private String mapName;
     private List<RoadDef> roads;
+    private List<RoadTypeDef> roadTypes;
 
     public Map(Lexer l){
         this.lexer = l;
         this.roads = new ArrayList<>();
+        this.roadTypes = new ArrayList<>();
 
         Token prev = null;
         for (LexerToken lt : this.lexer.getTokens()){
@@ -62,7 +64,10 @@ public class Map {
             throw new IllegalStateException("Unexpected token!");
 
         while (!this.curToken.next().equals("}") || !this.hasNext()){
-            this.roads.add(new RoadDef(this));
+            if (this.curToken.next().equals("def")){
+                this.roadTypes.add(new RoadTypeDef(this));
+            }else
+                this.roads.add(new RoadDef(this));
 
             System.out.println(this.curToken);
         }
@@ -74,5 +79,17 @@ public class Map {
 
     public List<RoadDef> getRoads(){
         return this.roads;
+    }
+
+    public List<RoadTypeDef> getRoadTypes(){
+        return this.roadTypes;
+    }
+
+    public RoadTypeDef getRoadType(String name){
+        for (RoadTypeDef types : this.roadTypes){
+            if (types.getName().equals(name))
+                return types;
+        }
+        return null;
     }
 }

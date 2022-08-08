@@ -7,6 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * The map canvas object
+ */
 public class MapCanvas extends JPanel {
 
     private int width, height;
@@ -19,6 +22,11 @@ public class MapCanvas extends JPanel {
     private ArrayList<Road> roadList = new ArrayList<>();
     private ArrayList<RoadNumber> roadNumberList = new ArrayList<>();
 
+    /**
+     * Creates a new map canvas object with specified size.
+     * @param width The width of the canvas
+     * @param height The height of the canvas
+     */
     public MapCanvas(int width, int height){
         this.width = width;
         this.height = height;
@@ -27,6 +35,10 @@ public class MapCanvas extends JPanel {
         this.setPreferredSize(size);
     }
 
+    /**
+     * Resizes the map canvas
+     * @param dimension the new size
+     */
     public void resizeMap(Dimension dimension){
         this.width = dimension.width;
         this.height = dimension.height;
@@ -34,6 +46,10 @@ public class MapCanvas extends JPanel {
         this.repaint();
     }
 
+    /**
+     * Adds a road to the map canvas
+     * @param road
+     */
     public void addRoad(Road road){
         this.roadList.add(road);
 
@@ -41,6 +57,10 @@ public class MapCanvas extends JPanel {
             this.roadNumberList.add(new RoadNumber(road));
     }
 
+    /**
+     * Returns the current viewing location origin
+     * @return
+     */
     public Origin getOrigin(){
         return this.origin;
     }
@@ -50,22 +70,34 @@ public class MapCanvas extends JPanel {
         this.repaint();
     }
 
+    /**
+     * Zooms in or out of the map canvas. Positive factor zooms in; negative factor zooms out.
+     * @param factor the zoom amount
+     * @param point the point where to zoom
+     */
     public void zoom(float factor, Point point){
         if (this.scale + factor >= 0.1f && this.scale + factor < 10f)
             this.scale += factor;
 
         if (point != null) {
-            System.out.println(point.getX()*scale + ", " + point.getY()*scale);
-
+            System.out.println(origin.getX()*scale + ", " + origin.getY()*scale);
         }
 
         this.repaint();
     }
 
-    public void setMap(ParseMap map){
+    /**
+     * Loads the map file data into this map canvas
+     * @param map
+     */
+    public void loadMap(ParseMap map){
         this.map = map;
     }
 
+    /**
+     * Sets the current mouse location
+     * @param p
+     */
     public void setMouseLoc(Point p){
         this.mouseLoc = p;
         this.repaint();
@@ -82,15 +114,14 @@ public class MapCanvas extends JPanel {
         g.translate(origin.getX(), origin.getY());
 
         // draw roads
-        for (Road road : this.roadList) {
+        for (Road road : this.roadList)
             road.drawRoad((Graphics2D) g, this.scale);
-        }
 
         // draw road numbers
-        for (RoadNumber rn : this.roadNumberList) {
+        for (RoadNumber rn : this.roadNumberList)
             rn.draw((Graphics2D) g, this.scale);
-        }
 
+        // draw the text in the top left corner
         g.translate(-origin.getX(), -origin.getY());
         g.setColor(new Color(125, 125, 125));
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));

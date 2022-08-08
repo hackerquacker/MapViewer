@@ -39,17 +39,31 @@ map your_map_name {
 ```
 
 ### Map Data:
+
 All parameters like `[this]` are optional, but recommended.
 
-Motorways: `motorway(number_str, road_name_str, [width], (start_x, start_y), (next_x, next_y), [(next_x, next_y)...]);`
-- Road color: `rgb(252, 190, 33)`
+#### Defining your roads:
+You must define your road types before you can use them. This sets the road color, default width, route label background and foreground.
 
-Highways: `highway(number_str, road_name_str, [width], (start_x, start_y), (next_x, next_y), [(next_x, next_y)...]);`
-- Road color: `rgb(252, 212, 33)`
+To do this, use the `def` keyword:
 
-Route: `route(number_str, road_name_str, [width], (start_x, start_y), (next_x, next_y), [(next_x, next_y)...]);`
-Local: `highway(number_str, road_name_str, [width], (start_x, start_y), (next_x, next_y), [(next_x, next_y)...]);`
-- Road color: `rgb(255, 255, 255)`
+```def <typename> = new Road(red_val, green_val, blue_val, [default width], [label bg], [label fg]);```
+
+The `red_val` `green_val` `blue_val` are all integer values between 0->255 that define the road colour.
+<br>The `default width` defines the default width of the road when the `[width]` parameter isn't specified.
+<br>`label bg` `label fg` can be one of 4 values:
+- BLUE
+- GREEN
+- WHITE
+- BLACK
+
+#### Making your roads.
+
+To make a road, after your road definitions, the syntax is:
+
+`<type>(number_str, road_name_str, [width], (start_x, start_y), (next_x, next_y), [(next_x, next_y)...]);`
+
+(Where `<type>` is your `<typename>`)
 
 You can have as many points for a road as you want.
 
@@ -57,6 +71,8 @@ You can have as many points for a road as you want.
 
 ```
 map example_map {
+    def motorway = new Road(252, 190, 33, 6, BLUE, WHITE);
+    
     motorway("M1", "M1 Motorway", 12, (32, -787), (32, 100), (68, 100), (-47, 100));
 }
 ```

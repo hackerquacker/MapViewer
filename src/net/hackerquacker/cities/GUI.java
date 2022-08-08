@@ -110,11 +110,11 @@ public class GUI extends JFrame {
     public void addRoads(){
         ParseMap map = new ParseMap(this.mapFile);  // parse the map file into RoadDef objects
 
-        canvas.setMap(map);
+        canvas.loadMap(map);
 
         // add the roads onto the canvas.
         for (RoadDef defs : map.getMap().getRoads())
-            this.canvas.addRoad(new Road(defs.getRoadName(), defs.getType(), defs.getPoints(), defs.getWidth()));
+            this.canvas.addRoad(new Road(map.getMap(), defs.getRoadName(), defs.getType(), defs.getPoints(), defs.getWidth()));
     }
 
 

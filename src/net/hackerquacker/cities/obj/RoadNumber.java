@@ -34,7 +34,7 @@ public class RoadNumber {
 
                     if (dist > 60) {
                         for (int i = yMin + 20; i < yMax-20; i += 200)
-                            this.drawNumber(g, (int) (x * scale), i, this.road.getType() == RoadType.MOTORWAY);
+                            this.drawNumber(g, (int) (x * scale), i);
                     }
                 }else{
                     // East West Direction
@@ -45,7 +45,7 @@ public class RoadNumber {
 
                     if (dist > 60) {
                         for (int i = xMin + 20; i < xMax-20; i += 200)
-                            this.drawNumber(g, i, y, this.road.getType() == RoadType.MOTORWAY);
+                            this.drawNumber(g, i, y);
                     }
                 }
             }
@@ -54,10 +54,9 @@ public class RoadNumber {
 
     }
 
-    private void drawNumber(Graphics2D g, int x, int y, boolean mwy){
-        if (mwy)
-            g.setColor(new Color(2, 50, 171));
-        else g.setColor(new Color(19, 145, 15));
+    private void drawNumber(Graphics2D g, int x, int y){
+        g.setColor(this.road.getLabelBg());
+
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
 
         String[] splitStr = this.road.getName().split(" ");
@@ -70,7 +69,7 @@ public class RoadNumber {
         float h = 19;
 
         g.fillRect(x - (int)(w/2), y - (int)(h/2), (int)w, (int)h);
-        g.setColor(Color.WHITE);
+        g.setColor(this.road.getLabelFg());
         g.drawString(splitStr[0], x + 5 - (int)(w/2) - (splitStr.length-1)*3, y + 14 - (int)(h/2));
 
         if (splitStr.length > 1) {

@@ -2,6 +2,10 @@
 
 map cities_server {
 
+    def motorway = new Road(252, 190, 33, 6, BLUE);
+    def highway = new Road(252, 212, 33, 5, GREEN);
+    def route = new Road(255, 255, 255, 5, WHITE, BLACK);
+    def local = new Road(255, 255, 255, 5);
 
     motorway("", "", 3, (467, 301), (467, 316), (461, 316), (443, 323));
 

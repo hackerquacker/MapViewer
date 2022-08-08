@@ -1,5 +1,7 @@
 package net.hackerquacker.cities.obj;
 
+import net.hackerquacker.cities.parser.RoadTypeDef;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +12,18 @@ import java.util.List;
 public class Road {
 
     private String name;    // the road name
+    private RoadTypeDef roadType;
 
     private Color color;    // the colour of the road
     private RoadType type;  // the type of this road
 
     private List<Point> points; // the coordinates for each node of this road
     private int width = -1;     // the width of this road
+
+    private Color labelBg;
+    private Color labelFg;
+
+    private Map map;
 
     /**
      * Creates a new road.
@@ -37,8 +45,8 @@ public class Road {
      * @param points    The list of nodes for this road
      * @param width     The width of this road
      */
-    public Road(String name, String type, List<Point> points, int width){
-        if (type.equals("motorway"))
+    public Road(Map map, String name, String type, List<Point> points, int width){
+        /*if (type.equals("motorway"))
             this.type = RoadType.MOTORWAY;
         if (type.equals("highway"))
             this.type = RoadType.HIGHWAY;
@@ -47,11 +55,18 @@ public class Road {
         if (type.equals("local"))
             this.type = RoadType.LOCAL;
         if (this.type == null)
-            this.type = RoadType.LOCAL;
+            this.type = RoadType.LOCAL;*/
+
+        this.map = map;
+
+        this.roadType = this.map.getRoadType(type);
+
+        if(this.roadType == null)
+            throw new IllegalStateException("Unknown road type: " + type);
 
         this.name = name;
 
-        this.color = this.type.getColor();
+        this.color = this.roadType.getColor();
         this.points = new ArrayList<>();
 
         if (width != -1)
@@ -97,10 +112,19 @@ public class Road {
 
     /**
      * Returns the type of this road
+     * @deprecated
      * @return
      */
     public RoadType getType(){
         return this.type;
+    }
+
+    public Color getLabelBg(){
+        return this.roadType.getLabelBg();
+    }
+
+    public Color getLabelFg(){
+        return this.roadType.getLabelFg();
     }
 
     /**
@@ -111,8 +135,12 @@ public class Road {
     public void drawRoad(Graphics2D g, float scale){
         Point lastPoint = this.points.get(0);
 
+        if (this.roadType == null)
+            return;
+
         for (int i = 1; i < this.points.size(); i++) {
-            if (this.type == RoadType.ROUTE){
+            g.setColor(this.getColor());
+            /*if (this.type == RoadType.ROUTE){
                 if (this.width == -1)
                     this.width = 3;
                 g.setColor(Color.BLACK);
@@ -136,7 +164,17 @@ public class Road {
                 g.drawLine((int)(lastPoint.getX()*scale), (int)(lastPoint.getY()*scale), (int)(this.points.get(i).getX()*scale), (int)(this.points.get(i).getY()*scale));
                 g.setStroke(new BasicStroke(this.width));
                 g.setColor(this.getColor());
-            }
+            }*/
+
+            if (this.width == -1)
+                this.width = this.roadType.getDefaultWidth();
+
+            g.setColor(Color.BLACK);
+            g.setStroke(new BasicStroke(this.width + 2));
+            g.drawLine((int)(lastPoint.getX()*scale), (int)(lastPoint.getY()*scale), (int)(this.points.get(i).getX()*scale), (int)(this.points.get(i).getY()*scale));
+            g.setStroke(new BasicStroke(this.width));
+            g.setColor(this.getColor());
+
             g.drawLine((int)(lastPoint.getX()*scale), (int)(lastPoint.getY()*scale), (int)(this.points.get(i).getX()*scale), (int)(this.points.get(i).getY()*scale));
             lastPoint = this.points.get(i);
         }
