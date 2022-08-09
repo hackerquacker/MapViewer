@@ -114,7 +114,7 @@ public class GUI extends JFrame {
 
         // add the roads onto the canvas.
         for (RoadDef defs : map.getMap().getRoads())
-            this.canvas.addRoad(new Road(map.getMap(), defs.getRoadName(), defs.getType(), defs.getPoints(), defs.getWidth()));
+            this.canvas.addRoad(new Road(map.getMap(), defs.getRoadName(), defs.getRoadFullName(), defs.getType(), defs.getPoints(), defs.getWidth()));
     }
 
 

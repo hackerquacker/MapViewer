@@ -7,8 +7,11 @@ I wanted to map out all the roads however there were no simple solutions availab
 - [x] draw roads, highways and motorways
   - [x] draw highway numbers
   - [x] custom widths
-  - [ ] custom colours
+  - [x] draw Route Number labels
+  - [x] draw Road name labels
+  - [x] custom colours
 - [x] Map parser and reading map files
+  - [x] Define custom road types, colours and label colours.
   - [ ] allow user to specify map to load
   - [ ] easily switch between maps
 - [x] GUI
@@ -71,8 +74,10 @@ You can have as many points for a road as you want.
 
 ```
 map example_map {
+    // Define a new road type called motorway
     def motorway = new Road(252, 190, 33, 6, BLUE, WHITE);
     
+    // create a new road segment of type motorway
     motorway("M1", "M1 Motorway", 12, (32, -787), (32, 100), (68, 100), (-47, 100));
 }
 ```

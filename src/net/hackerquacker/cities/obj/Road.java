@@ -12,10 +12,10 @@ import java.util.List;
 public class Road {
 
     private String name;    // the road name
+    private String long_name;
     private RoadTypeDef roadType;
 
     private Color color;    // the colour of the road
-    private RoadType type;  // the type of this road
 
     private List<Point> points; // the coordinates for each node of this road
     private int width = -1;     // the width of this road
@@ -28,13 +28,11 @@ public class Road {
     /**
      * Creates a new road.
      * @param name  The name of the road
-     * @param type  The type of this road
      */
-    public Road(String name, RoadType type){
+    public Road(String name){
         this.name = name;
-        this.type = type;
 
-        this.color = this.type.getColor();
+        this.color = Color.WHITE;
         this.points = new ArrayList<>();
     }
 
@@ -45,7 +43,7 @@ public class Road {
      * @param points    The list of nodes for this road
      * @param width     The width of this road
      */
-    public Road(Map map, String name, String type, List<Point> points, int width){
+    public Road(Map map, String name, String long_name, String type, List<Point> points, int width){
         /*if (type.equals("motorway"))
             this.type = RoadType.MOTORWAY;
         if (type.equals("highway"))
@@ -58,6 +56,7 @@ public class Road {
             this.type = RoadType.LOCAL;*/
 
         this.map = map;
+        this.long_name = long_name;
 
         this.roadType = this.map.getRoadType(type);
 
@@ -111,18 +110,17 @@ public class Road {
     }
 
     /**
-     * Returns the type of this road
-     * @deprecated
+     * Returns the color of the label background
      * @return
      */
-    public RoadType getType(){
-        return this.type;
-    }
-
     public Color getLabelBg(){
         return this.roadType.getLabelBg();
     }
 
+    /**
+     * Returns the color of the label foreground
+     * @return
+     */
     public Color getLabelFg(){
         return this.roadType.getLabelFg();
     }
@@ -138,44 +136,66 @@ public class Road {
         if (this.roadType == null)
             return;
 
+        if (this.width == -1)
+            this.width = this.roadType.getDefaultWidth();
+
         for (int i = 1; i < this.points.size(); i++) {
-            g.setColor(this.getColor());
-            /*if (this.type == RoadType.ROUTE){
-                if (this.width == -1)
-                    this.width = 3;
-                g.setColor(Color.BLACK);
-                g.setStroke(new BasicStroke(this.width + 2));
-                g.drawLine((int)(lastPoint.getX()*scale), (int)(lastPoint.getY()*scale), (int)(this.points.get(i).getX()*scale), (int)(this.points.get(i).getY()*scale));
-                g.setStroke(new BasicStroke(this.width));
-                g.setColor(this.getColor());
-            }else if (this.type == RoadType.HIGHWAY){
-                if (this.width == -1)
-                    this.width = 3;
-                g.setColor(Color.BLACK);
-                g.setStroke(new BasicStroke(this.width+2));
-                g.drawLine((int)(lastPoint.getX()*scale), (int)(lastPoint.getY()*scale), (int)(this.points.get(i).getX()*scale), (int)(this.points.get(i).getY()*scale));
-                g.setStroke(new BasicStroke(this.width));
-                g.setColor(this.getColor());
-            }else if (this.type == RoadType.MOTORWAY) {
-                if (this.width == -1)
-                    this.width = 6;
-                g.setColor(Color.BLACK);
-                g.setStroke(new BasicStroke(this.width+2));
-                g.drawLine((int)(lastPoint.getX()*scale), (int)(lastPoint.getY()*scale), (int)(this.points.get(i).getX()*scale), (int)(this.points.get(i).getY()*scale));
-                g.setStroke(new BasicStroke(this.width));
-                g.setColor(this.getColor());
-            }*/
-
-            if (this.width == -1)
-                this.width = this.roadType.getDefaultWidth();
-
+            // draw background
             g.setColor(Color.BLACK);
             g.setStroke(new BasicStroke(this.width + 2));
             g.drawLine((int)(lastPoint.getX()*scale), (int)(lastPoint.getY()*scale), (int)(this.points.get(i).getX()*scale), (int)(this.points.get(i).getY()*scale));
+
+            lastPoint = this.points.get(i);
+        }
+
+        lastPoint = this.points.get(0);
+
+        for (int i = 1; i < this.points.size(); i++) {
+
             g.setStroke(new BasicStroke(this.width));
             g.setColor(this.getColor());
-
             g.drawLine((int)(lastPoint.getX()*scale), (int)(lastPoint.getY()*scale), (int)(this.points.get(i).getX()*scale), (int)(this.points.get(i).getY()*scale));
+
+            double dist = this.points.get(i).getDistance(lastPoint);
+            // Draw the road name
+            if (this.points.get(i).getY() == lastPoint.getY() && scale > 1) {   // draw the horizontal label
+                if (dist > 60/scale && dist < 300) {
+                    g.setColor(Color.BLACK);
+                    g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 10));
+
+                    float midPoint = Math.min(lastPoint.getX(), this.points.get(i).getX()) * scale + (Math.max(lastPoint.getX(), this.points.get(i).getX()) * scale - Math.min(lastPoint.getX(), this.points.get(i).getX()) * scale) / 2;
+                    float width = g.getFontMetrics().stringWidth(this.long_name);
+
+                    if (width < dist*scale)
+                        g.drawString(this.long_name, midPoint - width / 2, (lastPoint.getY() * scale) + 3);
+                } else if (dist > 300) {
+                    g.setColor(Color.BLACK);
+                    g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 10));
+                    for (int x = Math.min(lastPoint.getX(), this.points.get(i).getX()) + 30; x < Math.max(lastPoint.getX(), this.points.get(i).getX()) - 30; x += 300) {
+                        g.drawString(this.long_name, x*scale, (lastPoint.getY() * scale) + 3);
+                    }
+                }
+            }else if (this.points.get(i).getX() == lastPoint.getX() && scale > 1){  // draw vertical labels
+                g.rotate(-Math.PI/2);
+                if (dist > 60/scale && dist < 300) {
+                    g.setColor(Color.BLACK);
+                    g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 10));
+
+                    float midPoint = Math.min(lastPoint.getY(), this.points.get(i).getY()) * scale + (Math.max(lastPoint.getY(), this.points.get(i).getY()) * scale - Math.min(lastPoint.getY(), this.points.get(i).getY()) * scale) / 2;
+                    float width = g.getFontMetrics().stringWidth(this.long_name);
+
+                    if (width < dist*scale)
+                        g.drawString(this.long_name, -(midPoint + width/2), lastPoint.getX()*scale + 3);
+                }else if (dist > 300) {
+                    g.setColor(Color.BLACK);
+                    g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 10));
+                    for (int y = Math.min(lastPoint.getY(), this.points.get(i).getY()) + 30; y < Math.max(lastPoint.getY(), this.points.get(i).getY()) - 30; y += 300) {
+                        g.drawString(this.long_name, -y*scale, lastPoint.getX()*scale + 3);
+                    }
+                }
+                g.rotate(Math.PI/2);
+            }
+
             lastPoint = this.points.get(i);
         }
     }
