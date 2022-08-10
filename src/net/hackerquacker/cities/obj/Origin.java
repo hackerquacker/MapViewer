@@ -9,9 +9,11 @@ public class Origin {
         this.y = y;
     }
 
-    public void add(int x, int y){
+    public Origin add(int x, int y){
         this.x += x;
         this.y += y;
+
+        return this;
     }
 
     public void add(Origin o){

@@ -32,8 +32,8 @@ public class RoadNumber {
                     int yMax = (int)(Math.max(p.getY(), lastPoint.getY())*scale);
                     double dist = Math.sqrt(Math.pow((p.getX() - lastPoint.getX()), 2) + Math.pow((p.getY() - lastPoint.getY()), 2));
 
-                    if (dist > 60) {
-                        for (int i = yMin + 20; i < yMax-20; i += 200)
+                    if (dist*scale > 60) {
+                        for (int i = yMin + 50; i < yMax-50; i += 400)
                             this.drawNumber(g, (int) (x * scale), i);
                     }
                 }else{
@@ -43,8 +43,8 @@ public class RoadNumber {
                     int xMax = (int)(Math.max(p.getX(), lastPoint.getX())*scale);
                     double dist = Math.sqrt(Math.pow((p.getX() - lastPoint.getX()), 2) + Math.pow((p.getY() - lastPoint.getY()), 2));
 
-                    if (dist > 60) {
-                        for (int i = xMin + 20; i < xMax-20; i += 200)
+                    if (dist*scale > 60) {
+                        for (int i = xMin + 50; i < xMax-50; i += 400)
                             this.drawNumber(g, i, y);
                     }
                 }

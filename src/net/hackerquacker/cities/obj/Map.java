@@ -68,8 +68,6 @@ public class Map {
                 this.roadTypes.add(new RoadTypeDef(this));
             }else
                 this.roads.add(new RoadDef(this));
-
-            System.out.println(this.curToken);
         }
     }
 

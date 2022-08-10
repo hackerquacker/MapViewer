@@ -12,8 +12,8 @@ I wanted to map out all the roads however there were no simple solutions availab
   - [x] custom colours
 - [x] Map parser and reading map files
   - [x] Define custom road types, colours and label colours.
-  - [ ] allow user to specify map to load
-  - [ ] easily switch between maps
+  - [x] allow user to specify map to load
+    - [x] easily switch between maps
 - [x] GUI
   - [x] Move map position by dragging mouse
   - [x] Use mouse wheel and keys `=`, and `-` to zoom
@@ -81,3 +81,23 @@ map example_map {
     motorway("M1", "M1 Motorway", 12, (32, -787), (32, 100), (68, 100), (-47, 100));
 }
 ```
+
+
+## Changelog
+
+>#### Alpha 1.2
+> <span>+ Added Menu Bar
+> <br>+ Added ability to load and switch custom maps
+
+>#### Alpha 1.1
+><span>+ Added Road names to roads
+> <br>+ Fixed road outlines to not draw inside the same road at corners.
+> <br>+ Changed map parser to allow for custom road declarations, colours and label colours
+
+>#### Alpha 1.0
+>**First release.**
+><br>+ Added Roads (Predefined motorway, highway, route and local types).
+><br>+ Reading and parsing map data from file.
+><br>+ Route Numbering.
+><br>+ Prints In game coordinate for mouse position.
+><br>+ Allows input from mouse and keyboard for zoom and movement

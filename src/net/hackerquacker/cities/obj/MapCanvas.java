@@ -6,6 +6,7 @@ import net.hackerquacker.cities.parser.ParseMap;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 /**
  * The map canvas object
@@ -79,10 +80,6 @@ public class MapCanvas extends JPanel {
         if (this.scale + factor >= 0.1f && this.scale + factor < 10f)
             this.scale += factor;
 
-        if (point != null) {
-            System.out.println(origin.getX()*scale + ", " + origin.getY()*scale);
-        }
-
         this.repaint();
     }
 
@@ -91,7 +88,13 @@ public class MapCanvas extends JPanel {
      * @param map
      */
     public void loadMap(ParseMap map){
+        this.roadList.clear();
+        this.roadNumberList.clear();
+        this.scale = 1.0f;
+        this.origin = new Origin(0, 0);
+
         this.map = map;
+
     }
 
     /**
@@ -113,13 +116,15 @@ public class MapCanvas extends JPanel {
 
         g.translate(origin.getX(), origin.getY());
 
-        // draw roads
-        for (Road road : this.roadList)
-            road.drawRoad((Graphics2D) g, this.scale);
+        try {
+            // draw roads
+            for (Road road : this.roadList)
+                road.drawRoad((Graphics2D) g, this.scale);
 
-        // draw road numbers
-        for (RoadNumber rn : this.roadNumberList)
-            rn.draw((Graphics2D) g, this.scale);
+            // draw road numbers
+            for (RoadNumber rn : this.roadNumberList)
+                rn.draw((Graphics2D) g, this.scale);
+        }catch (ConcurrentModificationException e) {}
 
         // draw the text in the top left corner
         g.translate(-origin.getX(), -origin.getY());

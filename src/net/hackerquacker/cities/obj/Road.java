@@ -141,9 +141,17 @@ public class Road {
 
         for (int i = 1; i < this.points.size(); i++) {
             // draw background
-            g.setColor(Color.BLACK);
-            g.setStroke(new BasicStroke(this.width + 2));
+            g.setColor(Road.getOutlineColor(this.color));
+            g.setStroke(new BasicStroke(this.width+2));
             g.drawLine((int)(lastPoint.getX()*scale), (int)(lastPoint.getY()*scale), (int)(this.points.get(i).getX()*scale), (int)(this.points.get(i).getY()*scale));
+
+            /*if (this.points.get(i).getY() == lastPoint.getY()) {   // draw the horizontal label
+                g.drawLine((int)(lastPoint.getX()*scale), (int)(lastPoint.getY()*scale)+(int)Math.ceil(this.width/2)+(this.width % 2 == 0 ? 0 : 1), (int)(this.points.get(i).getX()*scale), (int)(this.points.get(i).getY()*scale)+(int)Math.ceil(this.width/2)+(this.width % 2 == 0 ? 0 : 1));
+                g.drawLine((int)(lastPoint.getX()*scale), (int)(lastPoint.getY()*scale)-(int)Math.ceil(this.width/2)-(this.width % 2 == 0 ? 0 : 1), (int)(this.points.get(i).getX()*scale), (int)(this.points.get(i).getY()*scale)-(int)Math.ceil(this.width/2)-(this.width % 2 == 0 ? 0 : 1));
+            }else if (this.points.get(i).getX() == lastPoint.getX()){
+                g.drawLine((int)(lastPoint.getX()*scale)+(int)Math.ceil(this.width/2)+(this.width % 2 == 0 ? 0 : 1), (int)(lastPoint.getY()*scale), (int)(this.points.get(i).getX()*scale)+(int)Math.ceil(this.width/2)+(this.width % 2 == 0 ? 0 : 1), (int)(this.points.get(i).getY()*scale));
+                g.drawLine((int)(lastPoint.getX()*scale)-(int)Math.ceil(this.width/2)-(this.width % 2 == 0 ? 0 : 1), (int)(lastPoint.getY()*scale), (int)(this.points.get(i).getX()*scale)-(int)Math.ceil(this.width/2)-(this.width % 2 == 0 ? 0 : 1), (int)(this.points.get(i).getY()*scale));
+            }*/
 
             lastPoint = this.points.get(i);
         }
@@ -198,5 +206,9 @@ public class Road {
 
             lastPoint = this.points.get(i);
         }
+    }
+
+    private static Color getOutlineColor(Color roadColor){
+        return new Color(Math.max(roadColor.getRed() - 50, 0), Math.max(roadColor.getGreen() - 50, 0), Math.max(roadColor.getBlue() - 50, 0));
     }
 }

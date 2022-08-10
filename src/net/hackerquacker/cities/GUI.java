@@ -1,5 +1,7 @@
 package net.hackerquacker.cities;
 
+import net.hackerquacker.cities.guiobj.MenuBar;
+import net.hackerquacker.cities.guiobj.MenuItem;
 import net.hackerquacker.cities.obj.MapCanvas;
 import net.hackerquacker.cities.obj.Origin;
 import net.hackerquacker.cities.obj.Point;
@@ -9,11 +11,12 @@ import net.hackerquacker.cities.parser.RoadDef;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.File;
 
 public class GUI extends JFrame {
 
     public static final String APP_NAME = "Map Viewer";
-    public static final String VER_NAME = "alpha 1.0";
+    public static final String VER_NAME = "alpha 1.2";
 
     // The object where the map will be drawn onto.
     public MapCanvas canvas = new MapCanvas(800, 600);
@@ -30,6 +33,46 @@ public class GUI extends JFrame {
         super("Map Viewer");
         this.setSize(800, 600);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+        MenuBar menuBar = new MenuBar();
+        MenuItem file = menuBar.add("File");
+        MenuItem view = menuBar.add("View");
+        MenuItem window = menuBar.add("Window");
+
+        // File menu
+        file.addItem("Open Map", ()->{
+            JFileChooser fc = new JFileChooser();
+            int res = fc.showOpenDialog(null);
+
+            if (res == JFileChooser.APPROVE_OPTION){
+                File f = fc.getSelectedFile();
+                mapFile = f.getAbsolutePath();
+                addRoads();
+                canvas.repaint();
+            }
+        });
+        file.addItem("Save Map", ()->{
+            System.out.println("Save Map");
+        });
+        file.addSeperator();
+        file.addItem("Close", ()->{System.exit(0);});
+
+        // View Menu
+        view.addItem("Zoom in", ()->{canvas.zoom(0.1f, new Point(0, 0));});
+        view.addItem("Zoom out", ()->{canvas.zoom(-0.1f, new Point(0, 0));});
+        view.addSeperator();
+        view.addItem("Move up", ()->{canvas.setOrigin(canvas.getOrigin().add(0, 100));});
+        view.addItem("Move down", ()->{canvas.setOrigin(canvas.getOrigin().add(0, -100));});
+        view.addItem("Move left", ()->{canvas.setOrigin(canvas.getOrigin().add(100, 0));});
+        view.addItem("Move right", ()->{canvas.setOrigin(canvas.getOrigin().add(-100, 0));});
+
+        // Window Menu
+        window.addItem("About " + APP_NAME, () -> {
+
+        });
+
+        menuBar.addMenuBar(this);
 
         this.add(canvas);
 
