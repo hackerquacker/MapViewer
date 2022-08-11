@@ -21,6 +21,18 @@ I wanted to map out all the roads however there were no simple solutions availab
   - [ ] Themes
   - [ ] Graphical map editor
 
+## Dependencies
+You will need to add these projects to this project to compile and run.
+#### JTouchBar - Maven
+```
+<dependency>
+	<groupId>com.thizzer.jtouchbar</groupId>
+	<artifactId>jtouchbar</artifactId>
+	<version>1.0.1-SNAPSHOT</version>
+</dependency>
+```
+
+
 ## How to generate your own map:
 This program currently only reads the `map.cities` file to generate maps. To create a custom map, create a new file called this in the root directory of this project.
 
@@ -84,6 +96,9 @@ map example_map {
 
 
 ## Changelog
+
+>#### Alpha 1.3
+> <span>+ Added Touchbar support
 
 >#### Alpha 1.2
 > <span>+ Added Menu Bar

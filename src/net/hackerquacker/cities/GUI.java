@@ -1,7 +1,11 @@
 package net.hackerquacker.cities;
 
+import com.thizzer.jtouchbar.JTouchBar;
+import com.thizzer.jtouchbar.item.view.TouchBarSlider;
+import com.thizzer.jtouchbar.item.view.TouchBarTextField;
 import net.hackerquacker.cities.guiobj.MenuBar;
 import net.hackerquacker.cities.guiobj.MenuItem;
+import net.hackerquacker.cities.guiobj.touchbar.TouchBarWrapper;
 import net.hackerquacker.cities.obj.MapCanvas;
 import net.hackerquacker.cities.obj.Origin;
 import net.hackerquacker.cities.obj.Point;
@@ -16,10 +20,10 @@ import java.io.File;
 public class GUI extends JFrame {
 
     public static final String APP_NAME = "Map Viewer";
-    public static final String VER_NAME = "alpha 1.2";
+    public static final String VER_NAME = "alpha 1.3";
 
     // The object where the map will be drawn onto.
-    public MapCanvas canvas = new MapCanvas(800, 600);
+    public MapCanvas canvas = new MapCanvas(1024, 768);
 
     // used when the user is dragging
     private double startDragX = 0, startDragY = 0;
@@ -28,12 +32,14 @@ public class GUI extends JFrame {
     // file name to load.
     private String mapFile = "map.cities";
 
+    private JTouchBar touchBar;
+    private TouchBarTextField zoomField, coordField;
+
     public GUI(){
         // set up the GUY
         super("Map Viewer");
         this.setSize(800, 600);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 
         MenuBar menuBar = new MenuBar();
         MenuItem file = menuBar.add("File");
@@ -59,8 +65,17 @@ public class GUI extends JFrame {
         file.addItem("Close", ()->{System.exit(0);});
 
         // View Menu
-        view.addItem("Zoom in", ()->{canvas.zoom(0.1f, new Point(0, 0));});
-        view.addItem("Zoom out", ()->{canvas.zoom(-0.1f, new Point(0, 0));});
+        view.addItem("Zoom in", ()->{
+            canvas.zoom(0.1f);
+            if (zoomField != null)
+                zoomField.setStringValue("Zoom: " + String.format("%.1f", canvas.getScale()));
+        });
+        view.addItem("Zoom out", ()->{
+            canvas.zoom(-0.1f);
+
+            if (zoomField != null)
+                zoomField.setStringValue("Zoom: " + String.format("%.1f", canvas.getScale()));
+        });
         view.addSeperator();
         view.addItem("Move up", ()->{canvas.setOrigin(canvas.getOrigin().add(0, 100));});
         view.addItem("Move down", ()->{canvas.setOrigin(canvas.getOrigin().add(0, -100));});
@@ -120,6 +135,8 @@ public class GUI extends JFrame {
             @Override
             public void mouseMoved(MouseEvent e) {
                 canvas.setMouseLoc(new Point(e.getX(), e.getY()));
+                if (coordField != null)
+                    coordField.setStringValue(canvas.getMapCoords().toString());
             }
         });
 
@@ -127,7 +144,9 @@ public class GUI extends JFrame {
         this.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                canvas.zoom(e.getUnitsToScroll() * 0.1f, new Point(e.getX(), e.getY()));
+                canvas.zoom(e.getUnitsToScroll() * 0.1f);
+                if (zoomField != null)
+                    zoomField.setStringValue("Zoom: " + String.format("%.1f", canvas.getScale()));
             }
         });
 
@@ -137,14 +156,54 @@ public class GUI extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_EQUALS){
-                    canvas.zoom(0.1f, null);
-                    System.out.println("Zoom in");
+                    canvas.zoom(0.1f);
+                    if (zoomField != null)
+                        zoomField.setStringValue("Zoom: " + String.format("%.1f", canvas.getScale()));
                 }else if (e.getKeyCode() == KeyEvent.VK_MINUS){
-                    canvas.zoom(-0.1f, null);
+                    canvas.zoom(-0.1f);
                     System.out.println("Zoom out");
+                    if (zoomField != null)
+                        zoomField.setStringValue("Zoom: " + String.format("%.1f", canvas.getScale()));
                 }
             }
         });
+
+        // Add touchbar support
+        if(System.getProperty("os.name").equals("Mac OS X")){
+            TouchBarWrapper touchbar = new TouchBarWrapper("MapViewerIdentifier");
+
+            if (touchbar.shouldEnable()) {
+                // Add the name of the program to the left of the touchbar
+                touchbar.addText("APP_NAME_0", APP_NAME + " " + VER_NAME + " ");
+                touchbar.addSeperator("SEP_0", 1);
+
+                this.coordField = touchbar.addText("COORD_TF", canvas.getMapCoords().toString());
+                touchbar.addSeperator("SEP_1", 1);
+
+                // add zoom text
+                zoomField = touchbar.addText("ZOOM_TEXT", "Zoom: " + canvas.getScale());
+
+                // add a zoom slider
+                TouchBarSlider slider = touchbar.addSlider("ZOOM_SLIDER", 0.1, 10, (v) -> {
+                    canvas.zoomAbsolute(v);
+                    zoomField.setStringValue("Zoom: " + String.format("%.1f", canvas.getScale()));
+                });
+
+                touchbar.addButton("Zoom_In", "+", () -> {
+                    canvas.zoom(0.1f);
+                    zoomField.setStringValue("Zoom: " + String.format("%.1f", canvas.getScale()));
+                });
+
+                touchbar.addButton("Zoom_Out", "-", () -> {
+                    canvas.zoom(-0.1f);
+                    zoomField.setStringValue("Zoom: " + String.format("%.1f", canvas.getScale()));
+                });
+
+                touchbar.addSeperator("SEP_2", 1);
+
+                touchbar.getTouchBar().show(this);
+            }
+        }
     }
 
     /**
@@ -160,8 +219,10 @@ public class GUI extends JFrame {
             this.canvas.addRoad(new Road(map.getMap(), defs.getRoadName(), defs.getRoadFullName(), defs.getType(), defs.getPoints(), defs.getWidth()));
     }
 
-
     public static void main(String[] args){
+        // Add the menus onto the OS X menubar
+        if(System.getProperty("os.name").equals("Mac OS X"))
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
         new GUI();
     }
 }

@@ -74,11 +74,19 @@ public class MapCanvas extends JPanel {
     /**
      * Zooms in or out of the map canvas. Positive factor zooms in; negative factor zooms out.
      * @param factor the zoom amount
-     * @param point the point where to zoom
      */
-    public void zoom(float factor, Point point){
-        if (this.scale + factor >= 0.1f && this.scale + factor < 10f)
+    public void zoom(float factor){
+        if (this.scale + factor >= 0.1f && this.scale + factor < 10f) {
             this.scale += factor;
+            this.origin.add((int)((this.origin.getX()*factor)), (int)((this.origin.getY()*factor)));
+        }
+
+
+        this.repaint();
+    }
+
+    public void zoomAbsolute(double zoom){
+        this.scale = (float)zoom;
 
         this.repaint();
     }
@@ -136,5 +144,17 @@ public class MapCanvas extends JPanel {
             g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
             g.drawString("Map: " + map.getMap().getMapName() + ", " + String.format("%.0f, %.0f", (this.mouseLoc.getX() - this.origin.getX())/this.scale, (this.mouseLoc.getY() - this.origin.getY())/this.scale), 7, 36);
         }
+    }
+
+    public float getScale() {
+        return this.scale;
+    }
+
+    public Point getMouseCoords(){
+        return this.mouseLoc;
+    }
+
+    public Point getMapCoords(){
+        return new Point((int)((this.mouseLoc.getX() - this.origin.getX())/this.scale), (int)((this.mouseLoc.getY() - this.origin.getY())/this.scale));
     }
 }
