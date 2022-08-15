@@ -15,7 +15,9 @@ public class MapCanvas extends JPanel {
 
     private int width, height;
     private float scale = 1.0f;
-    private Origin origin = new Origin(0, 0);
+    private Point origin = new Point(0, 0);
+
+    // Map parser that contains all map data.
     private ParseMap map;
 
     private Point mouseLoc = new Point(0, 0);
@@ -54,7 +56,7 @@ public class MapCanvas extends JPanel {
     public void addRoad(Road road){
         this.roadList.add(road);
 
-        if (!road.getName().equals(""))
+        if (!road.getShortName().equals(""))
             this.roadNumberList.add(new RoadNumber(road));
     }
 
@@ -62,11 +64,15 @@ public class MapCanvas extends JPanel {
      * Returns the current viewing location origin
      * @return
      */
-    public Origin getOrigin(){
+    public Point getOrigin(){
         return this.origin;
     }
 
-    public void setOrigin(Origin origin){
+    /**
+     * Sets the origin to the point specified
+     * @param origin the new origin
+     */
+    public void setOrigin(Point origin){
         this.origin = origin;
         this.repaint();
     }
@@ -85,6 +91,10 @@ public class MapCanvas extends JPanel {
         this.repaint();
     }
 
+    /**
+     * Sets the scale value.
+     * @param zoom the new scale value
+     */
     public void zoomAbsolute(double zoom){
         this.scale = (float)zoom;
 
@@ -99,7 +109,7 @@ public class MapCanvas extends JPanel {
         this.roadList.clear();
         this.roadNumberList.clear();
         this.scale = 1.0f;
-        this.origin = new Origin(0, 0);
+        this.origin = new Point(0, 0);
 
         this.map = map;
 
@@ -146,14 +156,26 @@ public class MapCanvas extends JPanel {
         }
     }
 
+    /**
+     * Returns the scale of the map
+     * @return
+     */
     public float getScale() {
         return this.scale;
     }
 
+    /**
+     * Returns the point of the current mouse cursor in the window
+     * @return
+     */
     public Point getMouseCoords(){
         return this.mouseLoc;
     }
 
+    /**
+     * Returns a point with the current map coords of the mouse cursor
+     * @return
+     */
     public Point getMapCoords(){
         return new Point((int)((this.mouseLoc.getX() - this.origin.getX())/this.scale), (int)((this.mouseLoc.getY() - this.origin.getY())/this.scale));
     }

@@ -38,6 +38,10 @@ public class ParseMap {
         this.map = parse;
     }
 
+    /**
+     * Returns the map object
+     * @return
+     */
     public Map getMap(){
         return this.map;
     }

@@ -7,34 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This object handles drawing of roads
+ * This class handles drawing of roads
  */
 public class Road {
 
-    private String name;    // the road name
-    private String long_name;
-    private RoadTypeDef roadType;
+    private final String name;    // the road name
+    private final String long_name;
+    private final RoadTypeDef roadType;
 
-    private Color color;    // the colour of the road
+    private final Color color;    // the colour of the road
 
-    private List<Point> points; // the coordinates for each node of this road
+    private final List<Point> points; // the coordinates for each node of this road
     private int width = -1;     // the width of this road
 
-    private Color labelBg;
-    private Color labelFg;
-
     private Map map;
-
-    /**
-     * Creates a new road.
-     * @param name  The name of the road
-     */
-    public Road(String name){
-        this.name = name;
-
-        this.color = Color.WHITE;
-        this.points = new ArrayList<>();
-    }
 
     /**
      * Creates a new road
@@ -44,17 +30,6 @@ public class Road {
      * @param width     The width of this road
      */
     public Road(Map map, String name, String long_name, String type, List<Point> points, int width){
-        /*if (type.equals("motorway"))
-            this.type = RoadType.MOTORWAY;
-        if (type.equals("highway"))
-            this.type = RoadType.HIGHWAY;
-        if (type.equals("route"))
-            this.type = RoadType.ROUTE;
-        if (type.equals("local"))
-            this.type = RoadType.LOCAL;
-        if (this.type == null)
-            this.type = RoadType.LOCAL;*/
-
         this.map = map;
         this.long_name = long_name;
 
@@ -74,6 +49,10 @@ public class Road {
         for (Point p : points){
             this.addPoint(p.getX(), p.getY());
         }
+
+
+        if (this.width == -1)
+            this.width = this.roadType.getDefaultWidth();
     }
 
     /**
@@ -87,15 +66,23 @@ public class Road {
 
     /**
      * Returns the name of this road
-     * @return
+     * @return String
      */
-    public String getName(){
+    public String getShortName(){
         return this.name;
     }
 
     /**
+     * Returns the long name of this road
+     * @return String
+     */
+    public String getName(){
+        return this.long_name;
+    }
+
+    /**
      * Returns the colour of this road
-     * @return
+     * @return Color
      */
     public Color getColor(){
         return this.color;
@@ -103,7 +90,7 @@ public class Road {
 
     /**
      * Returns the list of points that make up this road
-     * @return
+     * @return List of points
      */
     public List<Point> getPoints(){
         return this.points;
@@ -111,7 +98,7 @@ public class Road {
 
     /**
      * Returns the color of the label background
-     * @return
+     * @return Color
      */
     public Color getLabelBg(){
         return this.roadType.getLabelBg();
@@ -119,7 +106,7 @@ public class Road {
 
     /**
      * Returns the color of the label foreground
-     * @return
+     * @return Color
      */
     public Color getLabelFg(){
         return this.roadType.getLabelFg();
@@ -136,9 +123,8 @@ public class Road {
         if (this.roadType == null)
             return;
 
-        if (this.width == -1)
-            this.width = this.roadType.getDefaultWidth();
 
+        // Draw outline
         for (int i = 1; i < this.points.size(); i++) {
             // draw background
             g.setColor(Road.getOutlineColor(this.color));
@@ -158,14 +144,17 @@ public class Road {
 
         lastPoint = this.points.get(0);
 
+        // Draws the actual road
         for (int i = 1; i < this.points.size(); i++) {
 
             g.setStroke(new BasicStroke(this.width));
             g.setColor(this.getColor());
             g.drawLine((int)(lastPoint.getX()*scale), (int)(lastPoint.getY()*scale), (int)(this.points.get(i).getX()*scale), (int)(this.points.get(i).getY()*scale));
 
+
+            // Draw the road name onto the road
+
             double dist = this.points.get(i).getDistance(lastPoint);
-            // Draw the road name
             if (this.points.get(i).getY() == lastPoint.getY() && scale > 1) {   // draw the horizontal label
                 if (dist > 60/scale && dist < 300) {
                     g.setColor(Color.BLACK);
@@ -208,6 +197,11 @@ public class Road {
         }
     }
 
+    /**
+     * Darkens the given color and returns the new color
+     * @param roadColor the road color
+     * @return the new darkened color.
+     */
     private static Color getOutlineColor(Color roadColor){
         return new Color(Math.max(roadColor.getRed() - 50, 0), Math.max(roadColor.getGreen() - 50, 0), Math.max(roadColor.getBlue() - 50, 0));
     }

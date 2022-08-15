@@ -7,6 +7,11 @@ import net.hackerquacker.cities.parser.token.TokenType;
 import java.awt.*;
 import java.util.HashMap;
 
+/**
+ * Parses the def function
+ *
+ * Example: def motorway = new Road(252, 190, 33, 6, BLUE);
+ */
 public class RoadTypeDef {
 
     private static java.util.Map<String, Color> colors = new HashMap<>();
@@ -27,26 +32,48 @@ public class RoadTypeDef {
         RoadTypeDef.colors.put("GREEN", new Color(19, 145, 15));
         RoadTypeDef.colors.put("WHITE", Color.WHITE);
         RoadTypeDef.colors.put("BLACK", Color.BLACK);
+        RoadTypeDef.colors.put("GOLD", new Color(230, 165, 14));
+        RoadTypeDef.colors.put("RED", new Color(250, 41, 17));
 
         this.parse();
     }
 
+    /**
+     * Returns the color of this road
+     * @return Color
+     */
     public Color getColor(){
         return this.color;
     }
 
+    /**
+     * Returns the name keyword for this road
+     * @return String
+     */
     public String getName(){
         return this.name;
     }
 
+    /**
+     * Returns the default width of this road
+     * @return int
+     */
     public int getDefaultWidth(){
         return this.defaultWidth;
     }
 
+    /**
+     * Returns the color of the road shield label background
+     * @return Color
+     */
     public Color getLabelBg(){
         return this.labelBg;
     }
 
+    /**
+     * Returns the color of the road shield label text (foreground)
+     * @return Color
+     */
     public Color getLabelFg(){
         return this.labelFg;
     }

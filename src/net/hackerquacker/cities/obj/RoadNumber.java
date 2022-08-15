@@ -16,12 +16,20 @@ public class RoadNumber {
     // The road that this object is attached to
     private Road road;
 
+    /**
+     * Creates a new road number object that is attached to road
+     * @param road the road that this object is attached to.
+     */
     public RoadNumber(Road road){
         this.road = road;
     }
 
+    /**
+     * Draws the road number onto the road.
+     * @param g the graphics context
+     * @param scale the scale of the map.
+     */
     public void draw(Graphics2D g, float scale){
-
         Point lastPoint = null;
         for (Point p : this.road.getPoints()){
             if (lastPoint != null){
@@ -54,12 +62,18 @@ public class RoadNumber {
 
     }
 
+    /**
+     * Draws a number label at the given location
+     * @param g the graphics context
+     * @param x the x coordinate
+     * @param y the y coordinate
+     */
     private void drawNumber(Graphics2D g, int x, int y){
         g.setColor(this.road.getLabelBg());
 
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
 
-        String[] splitStr = this.road.getName().split(" ");
+        String[] splitStr = this.road.getShortName().split(" ");
 
         float width = g.getFontMetrics().stringWidth(splitStr[0]);
 
@@ -78,6 +92,12 @@ public class RoadNumber {
         }
     }
 
+    /**
+     * Returns the direction of this road.
+     * @param p1 point 1
+     * @param p2 point 2
+     * @return the direction value.
+     */
     private static int direction(Point p1, Point p2){
         if (Math.abs(p1.getX()-p2.getX()) > Math.abs(p1.getY() - p2.getY())){
             // east west

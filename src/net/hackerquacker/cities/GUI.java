@@ -7,7 +7,6 @@ import net.hackerquacker.cities.guiobj.MenuBar;
 import net.hackerquacker.cities.guiobj.MenuItem;
 import net.hackerquacker.cities.guiobj.touchbar.TouchBarWrapper;
 import net.hackerquacker.cities.obj.MapCanvas;
-import net.hackerquacker.cities.obj.Origin;
 import net.hackerquacker.cities.obj.Point;
 import net.hackerquacker.cities.obj.Road;
 import net.hackerquacker.cities.parser.ParseMap;
@@ -17,21 +16,25 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 
+/**
+ * The main class for the Map Viewer Program
+ */
 public class GUI extends JFrame {
 
     public static final String APP_NAME = "Map Viewer";
-    public static final String VER_NAME = "alpha 1.3";
+    public static final String VER_NAME = "alpha 1.3.1";
 
     // The object where the map will be drawn onto.
     public MapCanvas canvas = new MapCanvas(1024, 768);
 
     // used when the user is dragging
     private double startDragX = 0, startDragY = 0;
-    private Origin prevOrigin;
+    private Point prevOrigin;
 
     // file name to load.
     private String mapFile = "map.cities";
 
+    // Touchbar tings
     private JTouchBar touchBar;
     private TouchBarTextField zoomField, coordField;
 
@@ -126,7 +129,7 @@ public class GUI extends JFrame {
         this.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                Origin newOrigin = new Origin(0, 0);
+                Point newOrigin = new Point(0, 0);
                 newOrigin.add(prevOrigin);
                 newOrigin.add(-(int)(startDragX - e.getX()), -(int)(startDragY - e.getY()));
                 canvas.setOrigin(newOrigin);
@@ -173,6 +176,7 @@ public class GUI extends JFrame {
             TouchBarWrapper touchbar = new TouchBarWrapper("MapViewerIdentifier");
 
             if (touchbar.shouldEnable()) {
+                touchbar.setFlexible();
                 // Add the name of the program to the left of the touchbar
                 touchbar.addText("APP_NAME_0", APP_NAME + " " + VER_NAME + " ");
                 touchbar.addSeperator("SEP_0", 1);
@@ -220,6 +224,8 @@ public class GUI extends JFrame {
     }
 
     public static void main(String[] args){
+        // Improve performance on Mac & Linux
+        System.setProperty("sun.java2d.opengl", "true");
         // Add the menus onto the OS X menubar
         if(System.getProperty("os.name").equals("Mac OS X"))
             System.setProperty("apple.laf.useScreenMenuBar", "true");

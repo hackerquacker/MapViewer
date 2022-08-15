@@ -5,7 +5,6 @@ I wanted to map out all the roads however there were no simple solutions availab
 ### The roadmap (ha, get it?)
 
 - [x] draw roads, highways and motorways
-  - [x] draw highway numbers
   - [x] custom widths
   - [x] draw Route Number labels
   - [x] draw Road name labels
@@ -18,8 +17,11 @@ I wanted to map out all the roads however there were no simple solutions availab
   - [x] Move map position by dragging mouse
   - [x] Use mouse wheel and keys `=`, and `-` to zoom
   - [x] Show real x,y coordinate of current mouse position
+  - [x] Touchbar support
   - [ ] Themes
   - [ ] Graphical map editor
+- [ ] Logic
+  - [ ] A* Pathfinding
 
 ## Dependencies
 You will need to add these projects to this project to compile and run.
@@ -97,19 +99,23 @@ map example_map {
 
 ## Changelog
 
->#### Alpha 1.3
+>##### Alpha 1.3.1
+> <span>+ Added Javadoc
+> <br>+ Simplified Codebase
+
+>### Alpha 1.3
 > <span>+ Added Touchbar support
 
->#### Alpha 1.2
+>### Alpha 1.2
 > <span>+ Added Menu Bar
 > <br>+ Added ability to load and switch custom maps
 
->#### Alpha 1.1
+>### Alpha 1.1
 ><span>+ Added Road names to roads
 > <br>+ Fixed road outlines to not draw inside the same road at corners.
 > <br>+ Changed map parser to allow for custom road declarations, colours and label colours
 
->#### Alpha 1.0
+>### Alpha 1.0
 >**First release.**
 ><br>+ Added Roads (Predefined motorway, highway, route and local types).
 ><br>+ Reading and parsing map data from file.
