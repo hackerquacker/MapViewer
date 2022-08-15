@@ -99,11 +99,13 @@ map example_map {
 
 ## Changelog
 
->##### Alpha 1.3.1
-> <span>+ Added Javadoc
-> <br>+ Simplified Codebase
 
 >### Alpha 1.3
+>
+>#### Alpha 1.3.1
+> <span>+ Added Javadoc
+> <br>+ Simplified Codebase; removed redundant code
+>#### Alpha 1.3
 > <span>+ Added Touchbar support
 
 >### Alpha 1.2
